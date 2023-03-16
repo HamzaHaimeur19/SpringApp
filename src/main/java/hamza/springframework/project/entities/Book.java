@@ -1,15 +1,15 @@
 package hamza.springframework.project.entities;
 
+
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 public class Book {
 
@@ -18,14 +18,15 @@ public class Book {
     private Long id;
     private String title;
     private String isbn;
-    private String publisher;
+
+    @OneToOne // each book have one publisher
+    private Publisher publisher;
 
     @ManyToMany
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "book_id")
             , inverseJoinColumns = @JoinColumn(name = "author_id"))
     // we created another table "author_book" that have the book id and author id to store books by their author
     private Set<Author> authors = new HashSet<>();
-
 
 
     public Long getId() {
@@ -52,11 +53,11 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public String getPublisher() {
+    public Publisher getPublisher() {
         return publisher;
     }
 
-    public void setPublisher(String publisher) {
+    public void setPublisher(Publisher publisher) {
         this.publisher = publisher;
     }
 
@@ -64,7 +65,7 @@ public class Book {
         return authors;
     }
 
-    public void setAuthor(Set<Author> author) {
+    public void setAuthor(Set<Author> authors) {
         this.authors = authors;
     }
 
@@ -78,6 +79,13 @@ public class Book {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    public Book(Long id, String title, String isbn, Publisher publisher) {
+        this.id = id;
+        this.title = title;
+        this.isbn = isbn;
+        this.publisher = publisher;
     }
 
     @Override
